@@ -1,16 +1,13 @@
-FROM alpine:latest
+FROM debian:11-slim
 
 MAINTAINER Cloud Concept "support@c2.gr"
 
-ENV VERSION=3.1.4
 ENV SITEMAP=http://www.example.com/sitemap.xml
 
-RUN apk update \
-    && apk add curl g++ make \
-    && curl http://download.joedog.org/siege/siege-$VERSION.tar.gz > siege-$VERSION.tar.gz \
-    && tar -xf siege-${VERSION}.tar.gz \
-    && cd siege-${VERSION} \
-    && ./configure \
-    && make install
+RUN apt update  && apt install siege curl -y
+RUN rm -rf /var/lib/{apt,dpkg,cache,log}/*
 
-ENTRYPOINT ["siege -c1 -f $SITEMAP"]
+COPY executor.sh /
+RUN chmod +x /executor.sh
+
+ENTRYPOINT ["/executor.sh"]
