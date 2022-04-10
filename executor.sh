@@ -1,7 +1,8 @@
 #!/bin/bash
 curl -s $SITEMAP | grep "<loc>" | awk -F"<loc>" '{print $2} ' | awk -F"</loc>" '{print $1}' > list.txt
 
-if [ "$CONVERTTOHTTP" = "tue" ]; then
+if [ "$CONVERTTOHTTP" = "true" ]; then
+   echo "Convrting to https"
    sed -i 's|https://|http://|g' /list.txt
 fi
 
